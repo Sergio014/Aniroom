@@ -121,8 +121,6 @@ class AuthTools:
 			try:
 				profile_data['user'] = user
 				Profile.objects.create(**profile_data).save()
-				group = Group.objects.get(name=profile.data["role"] + "_basic")
-				group.user_set.add(user)
 			except:
 				pass
 		return None

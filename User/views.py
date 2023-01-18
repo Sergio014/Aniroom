@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views.generic import UpdateView
+from django.contrib.auth.models import User
 
 from .auth_tools import AuthTools
 from .models import Profile, Post
@@ -73,7 +74,7 @@ def profile_view(request):
 def edit_profile_view(request):
 	user = request.user
 	if not user.is_authenticated:
-		return redirect('/')
+		return redirect('/login/')
 	profile = Profile.objects.get(user=user)
 	form = ProfileImageForm()
 	user_data = {
@@ -103,7 +104,7 @@ def edit_profile_view(request):
 	
 def add_post_view(request):
 	if not user.is_authenticated:
-		return redirect('/')
+		return redirect('/login/')
 	form = PostForm()
 	user = request.user
 	profile = Profile.objects.get(user=user)
@@ -124,9 +125,20 @@ def add_post_view(request):
 	
 def logout_view(request):
 	if not request.user.is_authenticated:
-		return redirect('/')
+		return redirect('/login/')
 	if request.POST:
 		AuthTools.logout(request)
 		return redirect('/login/')
 	return render(request, "User/logout.html")
-	
+
+def whatch_profile_view(request, username):
+	if not request.user.is_authenticated:
+		return redirect('/login/')
+	elif request.user.username == username:
+		return redirect('/')
+	user = User.objects.get(username=username)
+	context = {
+		'user': user,
+		'profile': Profile.objects.get(user=user),
+	}
+	return render(request, "User/watch_profile.html", context)
