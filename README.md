@@ -1,7 +1,7 @@
 # Aniroom
 Under development ..
 Run it using:
->>>pip install django
+>>>pip install django Pillow
 
 >>>cd Aniroom
 
