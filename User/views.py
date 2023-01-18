@@ -8,6 +8,8 @@ from .forms import ProfileImageForm, PostForm
 
 # Create your views here.
 def register_view(request):
+	if request.user.is_authenticated:
+		return redirect('/')
 	if request.POST:
 		form_data = request.POST
 		user_data = {
@@ -28,6 +30,8 @@ def register_view(request):
 	return render(request, "User/sign_up.html")
 
 def login_view(request):
+	if request.user.is_authenticated:
+		return redirect('/')
 	if request.POST:
 		data = request.POST
 		username = data.get('username', False)
@@ -43,12 +47,12 @@ def login_view(request):
 			"website_url": None,
 		}
 		AuthTools.profile_register(user, profile_data)
-		return redirect('/profile/')
+		return redirect('/')
 	return render(request, 'User/log_in_page.html')
 	
 def profile_view(request):
 	user = request.user
-	if user is not None:
+	if user.is_authenticated:
 		profile = Profile.objects.get(user=user)
 		try:
 			posts = Post.objects.filter(owner=profile)
@@ -68,6 +72,8 @@ def profile_view(request):
 	
 def edit_profile_view(request):
 	user = request.user
+	if not user.is_authenticated:
+		return redirect('/')
 	profile = Profile.objects.get(user=user)
 	form = ProfileImageForm()
 	user_data = {
@@ -96,6 +102,8 @@ def edit_profile_view(request):
 	return render(request, "User/edit_profile.html", context=user_data)
 	
 def add_post_view(request):
+	if not user.is_authenticated:
+		return redirect('/')
 	form = PostForm()
 	user = request.user
 	profile = Profile.objects.get(user=user)
@@ -111,5 +119,14 @@ def add_post_view(request):
 			image = form.cleaned_data.get("image")
 			info = form.cleaned_data.get("info")
 			Post.objects.create(image=image, info=info, owner=profile_data["profile"]).save()
-			return redirect('/profile/')
+			return redirect('/')
 	return render(request, "User/add_post.html", profile_data)
+	
+def logout_view(request):
+	if not request.user.is_authenticated:
+		return redirect('/')
+	if request.POST:
+		AuthTools.logout(request)
+		return redirect('/login/')
+	return render(request, "User/logout.html")
+	

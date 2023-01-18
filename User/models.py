@@ -10,7 +10,10 @@ class Profile(models.Model):
 	@property
 	def posts_count(self):
 		return self.post.all().count()
-		
+
+	def __str__(self):
+		return f"{self.user.username}"
+	
 class Post(models.Model):
 	image = models.ImageField(upload_to='post_images/')
 	info = models.CharField(max_length=255, null=True, blank=True)
@@ -20,11 +23,20 @@ class Post(models.Model):
 	def likes_count(self):
 		return self.likes.all().count()
 		
+	def __str__(self):
+		return f"{self.info}"
+		
 class Like(models.Model):
 	owner = models.ForeignKey(Profile, blank=True, null=True, on_delete=models.SET_NULL)
-	post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="likes")	
+	post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="likes")
+	
+	def __str__(self):
+		return f"{self.owner} liked {self.post}."
 
 class Comment(models.Model):
 	text = models.CharField(max_length=255)
 	owner = models.ForeignKey(Profile, null=True, blank=True, on_delete=models.SET_NULL)
-	post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comments")	
+	post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comments")
+	
+	def __str__(self):
+		return f"{self.owner} commented {self.post}."
