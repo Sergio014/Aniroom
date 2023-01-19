@@ -7,7 +7,7 @@ from django.contrib.auth.models import User, Group
 from django.conf import settings as django_settings
 from rest_framework.authtoken.models import Token
 
-from .models import Profile, UserFollowing, Blocked
+from .models import Profile, UserFollowing, Blocked, Like
 from . import settings as auth_settings
 import re
 
@@ -39,6 +39,18 @@ class AuthTools:
 				user=watcher,
 				following_user=following_user
 			)
+			return True
+		except:
+			return False
+	@staticmethod
+	def is_owner(user, request):
+		if user == request.user:
+			return True
+		return False
+	@staticmethod
+	def is_liked(watcher, post):
+		try:
+			Likes.objects.get(owner=watcher, post=post)
 			return True
 		except:
 			return False

@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.http import Http404
 
 from .auth_tools import AuthTools
-from .models import Profile, Post, UserFollowing
+from .models import Profile, Post, UserFollowing, Comment, Like
 from .forms import ProfileImageForm, PostForm
 
 # Create your views here.
@@ -106,7 +106,7 @@ def edit_profile_view(request):
 	return render(request, "User/edit_profile.html", context=user_data)
 	
 def add_post_view(request):
-	if not user.is_authenticated:
+	if not request.user.is_authenticated:
 		return redirect('/login/')
 	form = PostForm()
 	user = request.user
@@ -164,3 +164,40 @@ def whatch_profile_view(request, username):
 			context["followed"] = True
 		return render(request, "User/watch_profile.html", context)
 	return render(request, "User/watch_profile.html", context)
+	
+def post_view(request, username, pk):
+	if not request.user.is_authenticated:
+		return redirect('/login/')
+	user = User.objects.get(username=username)
+	profile = Profile.objects.get(user=user)
+	post = profile.post.get(pk=pk)
+	watcher = Profile.objects.get(user=request.user)
+	try:
+		comments = Comment.objects.filter(post=post),
+	except:
+		comments = None
+	context = {
+		"profile": profile,
+		'post': post,
+		"is_owner": AuthTools.is_owner(user, request),
+		"comments": comments,
+		"liked": AuthTools.is_liked(watcher, post)
+	}
+	if request.POST and "comment" in request.POST:
+		text = request.POST['comment']
+		Comment.objects.create(text=text, owner=watcher, post=post)
+		context["comments"] = Comment.objects.filter(post=post)
+		return render(request, "User/post.html", context)
+	elif request.POST and "delete" in request.POST and context["is_owner"]:
+		post.image.delete()
+		post.delete()
+		return redirect("/")
+	elif "unlike" in request.POST:
+		Like.objects.get(owner=watcher, post=post).delete()
+		context["liked"] = False
+		return render(request, "User/post.html", context) 
+	elif request.POST:
+		Like.objects.create(owner=watcher, post=post)
+		context["liked"] = True
+		return render(request, "User/post.html", context)
+	return render(request, "User/post.html", context)

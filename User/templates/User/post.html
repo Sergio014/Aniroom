@@ -1,0 +1,36 @@
+<h3>Post of {{ profile.user.username }}</h3>
+<h5>Info: {{ post.info }}</h5>
+{% if is_owner %}
+<form method="POST">
+  {% csrf_token %}
+  <input type="submit" name="delete" value="Delete">
+</form>
+{% endif %}
+
+{% if not liked %}
+<form method="POST">
+    {% csrf_token %}
+    <input type="submit" value="Like">
+</form>
+{% else %}
+<form method="POST">
+    {% csrf_token %}
+    <input type="submit" name="unlike" value="Unlike">
+</form>
+{% endif %}
+<h5>Like count: {{ post.likes_count }}</h5>
+<form method="POST">
+    {% csrf_token %}    
+    <label>Add comment:</label>
+    <input type="text" name="comment">
+    <input type="submit" value="Add comment">
+</form>
+
+<h3>
+    Comments:
+</h3>
+{% if comments %}
+{% for comment in comments %}
+<h6>{{ comment.text }}</h6>
+{% endfor %}
+{% endif %}
