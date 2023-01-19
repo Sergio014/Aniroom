@@ -11,3 +11,5 @@ admin.site.register(Like)
 admin.site.register(Comment)
 
 admin.site.register(UserFollowing)
+
+admin.site.register(Blocked)

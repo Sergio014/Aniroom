@@ -7,7 +7,7 @@ from django.contrib.auth.models import User, Group
 from django.conf import settings as django_settings
 from rest_framework.authtoken.models import Token
 
-from .models import Profile, UserFollowing
+from .models import Profile, UserFollowing, Blocked
 from . import settings as auth_settings
 import re
 
@@ -15,6 +15,23 @@ import re
 class AuthTools:
 	password_salt = auth_settings.AUTH_PASSWORD_SALT
 	token_age = auth_settings.AUTH_TOKEN_AGE
+	@staticmethod
+	def was_blocked(watcher, profile):
+		try:
+			Blocked.objects.filter(
+				user=watcher,
+				blocked_user=profile
+			)
+			return True
+		except:
+			return False
+	@staticmethod
+	def is_blocked(watcher, profile):
+		try:
+			profile.user_who_block.get(user=watcher)
+			return True
+		except:
+			return False
 	@staticmethod
 	def is_followed(watcher, following_user):
 		try:

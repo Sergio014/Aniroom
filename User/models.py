@@ -25,6 +25,14 @@ class Profile(models.Model):
 class UserFollowing(models.Model):
     user = models.ForeignKey(Profile, related_name="following", on_delete=models.CASCADE)
     following_user = models.ForeignKey(Profile, related_name="followers", on_delete=models.CASCADE)
+    def __str__(self):
+    	return f"{self.user} follow {self.following_user}"
+
+class Blocked(models.Model):
+    user = models.ForeignKey(Profile, related_name="user_who_block", on_delete=models.CASCADE)
+    blocked_user = models.ForeignKey(Profile, related_name="blocked_user", on_delete=models.CASCADE)
+    def __str__(self):
+    	return f"{self.user} blocked {self.blocked_user}"
 
 class Post(models.Model):
 	image = models.ImageField(upload_to='post_images/')

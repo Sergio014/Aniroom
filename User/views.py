@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views.generic import UpdateView
 from django.contrib.auth.models import User
+from django.http import Http404
 
 from .auth_tools import AuthTools
 from .models import Profile, Post, UserFollowing
@@ -144,6 +145,8 @@ def whatch_profile_view(request, username):
 		'profile': profile,
 		'followed': AuthTools.is_followed(watcher, profile),
 	}
+	if AuthTools.was_blocked(watcher, profile) or AuthTools.is_blocked(watcher, profile):
+		raise Http404
 	if request.POST:
 		try:
 			UserFollowing.objects.get(
