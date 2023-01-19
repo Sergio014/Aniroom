@@ -88,10 +88,12 @@ def edit_profile_view(request):
 		form = ProfileImageForm(request.POST, request.FILES)
 		if form.is_valid():
 			if form.cleaned_data["profile_image"] is not None:
-				img = form.cleaned_data.get("profile_image")
-				profile.profile_image = img
-				profile.save()
-				return render(request, "User/profile.html", context=user_data)
+			      if profile.profile_image:
+			      	profile.profile_image.delete()
+			      img = form.cleaned_data.get("profile_image")
+			      profile.profile_image = img
+			      profile.save()
+			      return render(request, "User/profile.html", context=user_data)
 			else:
 				user.username = "".join(form_data['username'])
 				user.first_name = form_data["first_name"]
