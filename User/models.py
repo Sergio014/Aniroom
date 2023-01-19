@@ -10,10 +10,22 @@ class Profile(models.Model):
 	@property
 	def posts_count(self):
 		return self.post.all().count()
+		
+	@property
+	def followers_count(self):
+		return self.followers.all().count()
+		
+	@property
+	def following_count(self):
+		return self.following.all().count()
 
 	def __str__(self):
 		return f"{self.user.username}"
-	
+
+class UserFollowing(models.Model):
+    user = models.ForeignKey(Profile, related_name="following", on_delete=models.CASCADE)
+    following_user = models.ForeignKey(Profile, related_name="followers", on_delete=models.CASCADE)
+
 class Post(models.Model):
 	image = models.ImageField(upload_to='post_images/')
 	info = models.CharField(max_length=255, null=True, blank=True)

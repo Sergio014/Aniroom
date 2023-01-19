@@ -4,7 +4,7 @@ from django.views.generic import UpdateView
 from django.contrib.auth.models import User
 
 from .auth_tools import AuthTools
-from .models import Profile, Post
+from .models import Profile, Post, UserFollowing
 from .forms import ProfileImageForm, PostForm
 
 # Create your views here.
@@ -136,9 +136,26 @@ def whatch_profile_view(request, username):
 		return redirect('/login/')
 	elif request.user.username == username:
 		return redirect('/')
+	watcher = Profile.objects.get(user=request.user)
 	user = User.objects.get(username=username)
+	profile = Profile.objects.get(user=user)
 	context = {
 		'user': user,
-		'profile': Profile.objects.get(user=user),
+		'profile': profile,
+		'followed': AuthTools.is_followed(watcher, profile),
 	}
+	if request.POST:
+		try:
+			UserFollowing.objects.get(
+				user=watcher,
+				following_user=profile
+			).delete()
+			context["followed"] = False
+		except:
+			UserFollowing.objects.create(
+				user=watcher,
+				following_user=context['profile']
+			)
+			context["followed"] = True
+		return render(request, "User/watch_profile.html", context)
 	return render(request, "User/watch_profile.html", context)

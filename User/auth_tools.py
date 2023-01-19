@@ -7,7 +7,7 @@ from django.contrib.auth.models import User, Group
 from django.conf import settings as django_settings
 from rest_framework.authtoken.models import Token
 
-from .models import Profile
+from .models import Profile, UserFollowing
 from . import settings as auth_settings
 import re
 
@@ -15,6 +15,16 @@ import re
 class AuthTools:
 	password_salt = auth_settings.AUTH_PASSWORD_SALT
 	token_age = auth_settings.AUTH_TOKEN_AGE
+	@staticmethod
+	def is_followed(watcher, following_user):
+		try:
+			UserFollowing.objects.filter(
+				user=watcher,
+				following_user=following_user
+			)
+			return True
+		except:
+			return False
 	@staticmethod
 	def issue_user_token(user, salt):
 		if user is not None:
