@@ -1,0 +1,21 @@
+
+<h2>Want to logout?</h2>
+<form method="POST">
+    {% csrf_token %}
+    <input type="submit" name="logout" value="Logout" style="height: 50px; width: 125px;">
+</form>
+<h2>Manage likes:</h2>
+<form method="POST">
+    {% csrf_token %}
+    <input type="submit" name="my_likes" value="My likes" style="height: 50px; width: 125px;">
+</form>
+<h2>Blocked users:</h2>
+<form method="POST">
+    {% csrf_token %}
+    <input type="submit" name="blocked_users" value="Blocked users" style="height: 50px; width: 125px;">
+</form>
+<h2>Send feedback:</h2>
+<form method="POST">
+    {% csrf_token %}
+    <input type="submit" name="send_feedback" value="Send feedback" style="height: 50px; width: 125px;">
+</form>

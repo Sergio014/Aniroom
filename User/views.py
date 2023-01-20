@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.http import Http404
 
 from .auth_tools import AuthTools
-from .models import Profile, Post, UserFollowing, Comment, Like
+from .models import Profile, Post, UserFollowing, Comment, Like, Feedback, Blocked
 from .forms import ProfileImageForm, PostForm
 
 # Create your views here.
@@ -125,14 +125,6 @@ def add_post_view(request):
 			Post.objects.create(image=image, info=info, owner=profile_data["profile"]).save()
 			return redirect('/')
 	return render(request, "User/add_post.html", profile_data)
-	
-def logout_view(request):
-	if not request.user.is_authenticated:
-		return redirect('/login/')
-	if request.POST:
-		AuthTools.logout(request)
-		return redirect('/login/')
-	return render(request, "User/logout.html")
 
 def whatch_profile_view(request, username):
 	if not request.user.is_authenticated:
@@ -201,3 +193,36 @@ def post_view(request, username, pk):
 		context["liked"] = True
 		return render(request, "User/post.html", context)
 	return render(request, "User/post.html", context)
+	
+def settings_view(request):
+	user = request.user
+	if not user.is_authenticated:
+		return redirect("/login/")
+	profile = Profile.objects.get(user=user)
+	if "logout" in request.POST:
+		AuthTools.logout(request)
+		return redirect('/login/')
+	elif "my_likes" in request.POST:
+		
+		posts = Post.objects.filter(likes__owner=profile)
+		context = {
+			"posts": posts,
+		}
+		return render(request, "User/liked_posts.html", context)
+	elif "blocked_users" in request.POST:
+		context = {
+			'blocked_users': profile.user_who_block.all()
+		}
+		return render(request, "User/blocked_users.html", context)
+	elif "send_feedback" in request.POST:
+		return render(request, "User/send_feedback.html")
+	elif "text" in request.POST:
+		text = request.POST["text"]
+		Feedback.objects.create(text=text)
+		return render(request, "User/settings.html")
+	elif "unblock" in request.POST:
+		username = request.POST["unblock"].split()[1]
+		blocked_user = Profile.objects.get(user__username=username)
+		Blocked.objects.filter(user=profile, blocked_user=blocked_user).delete()
+		return render(request, "User/settings.html")
+	return render(request, "User/settings.html")

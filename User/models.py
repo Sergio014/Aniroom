@@ -60,3 +60,6 @@ class Comment(models.Model):
 	
 	def __str__(self):
 		return f"{self.owner} commented {self.post}."
+		
+class Feedback(models.Model):
+	text = models.TextField()

@@ -1,0 +1,8 @@
+{% load static %}
+{% for user in blocked_users %}
+    <form method="POST">
+        {% csrf_token %}
+        <label>{{ user.blocked_user.user.username }}</label>
+        <input type="submit" name="unblock"value="Unblock {{  user.blocked_user.user.username }}" style="height: 50px; width: 125px;">
+    </form>
+{% endfor %}
