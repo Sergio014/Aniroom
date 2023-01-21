@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User 
+from django.contrib.auth.models import User
 
 class Profile(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -57,6 +57,10 @@ class Comment(models.Model):
 	text = models.CharField(max_length=255)
 	owner = models.ForeignKey(Profile, null=True, blank=True, on_delete=models.SET_NULL)
 	post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comments")
+	
+	@property
+	def likes_count(self):
+		return self.comments_like.all().count()
 	
 	def __str__(self):
 		return f"{self.owner} commented {self.post}."

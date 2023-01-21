@@ -165,15 +165,16 @@ def post_view(request, username, pk):
 	post = profile.post.get(pk=pk)
 	watcher = Profile.objects.get(user=request.user)
 	try:
-		comments = Comment.objects.filter(post=post),
+		comments = Comment.objects.filter(post=post)
 	except:
-		comments = None
+		comments = []
 	context = {
 		"profile": profile,
 		'post': post,
+		"watcher": watcher,
 		"is_owner": AuthTools.is_owner(user, request),
 		"comments": comments,
-		"liked": AuthTools.is_liked(watcher, post)
+		"liked": AuthTools.is_liked(watcher, post),
 	}
 	if request.POST and "comment" in request.POST:
 		text = request.POST['comment']
@@ -187,10 +188,19 @@ def post_view(request, username, pk):
 	elif "unlike" in request.POST:
 		Like.objects.get(owner=watcher, post=post).delete()
 		context["liked"] = False
-		return render(request, "User/post.html", context) 
-	elif request.POST:
+		return render(request, "User/post.html", context)
+	elif "like" in request.POST:
 		Like.objects.create(owner=watcher, post=post)
 		context["liked"] = True
+		return render(request, "User/post.html", context)
+	elif "delete_comment" in request.POST:
+		pk = request.POST["pk"]
+		Comment.objects.get(pk=pk).delete()
+		try:
+			Comment.objects.filter(post=post)
+			context["comments"]  = comments
+		except:
+			context["comments"]  = []
 		return render(request, "User/post.html", context)
 	return render(request, "User/post.html", context)
 	
