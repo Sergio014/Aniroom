@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+from taggit.managers import TaggableManager
+
 class Profile(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
 	profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True, default=None)
@@ -38,6 +40,7 @@ class Post(models.Model):
 	image = models.ImageField(upload_to='post_images/')
 	info = models.CharField(max_length=255, null=True, blank=True)
 	owner = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="post")
+	tags = TaggableManager()
 	
 	@property
 	def likes_count(self):

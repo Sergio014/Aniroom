@@ -1,7 +1,7 @@
 # Aniroom
 Under development ..
 Run it using:
->>>pip install django Pillow
+>>>pip install -r requirements.txt
 
 >>>cd Aniroom
 

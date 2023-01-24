@@ -58,7 +58,6 @@ def profile_view(request):
 		profile = Profile.objects.get(user=user)
 		try:
 			posts = Post.objects.filter(owner=profile)
-			print(posts)
 			user_data = {
 				"user": user,
 				"profile": profile,
@@ -119,7 +118,6 @@ def add_post_view(request):
 	if request.POST:
 		form = PostForm(request.POST, request.FILES)
 		if form.is_valid():
-			print(form.cleaned_data)
 			image = form.cleaned_data.get("image")
 			info = form.cleaned_data.get("info")
 			Post.objects.create(image=image, info=info, owner=profile_data["profile"]).save()

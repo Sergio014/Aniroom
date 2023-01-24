@@ -100,12 +100,8 @@ class AuthTools:
 	def authenticate_email(email, password):
 		if email is not None:
 			user = AuthTools.get_user_by_email(email)
-			print(user.is_active)
-			print("in authenticate_email")
 			if user is not None:
 				user = AuthTools.authenticate(user.username, password)
-				print(user)
-				print("Authenticated")
 				return user
 		else:
 			return False
@@ -128,7 +124,6 @@ class AuthTools:
 				logout(request)
 				return True
 			except Exception as e:
-				print(e)
 				pass
 		return False 
 	@staticmethod
