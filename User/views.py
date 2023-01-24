@@ -69,7 +69,7 @@ def profile_view(request):
 				"profile": profile,
 			}
 		return render(request, 'User/profile.html', context=user_data)
-	return render(request, 'User/log_in_page.html')
+	return redirect("/login/")
 	
 def edit_profile_view(request):
 	user = request.user
@@ -118,9 +118,11 @@ def add_post_view(request):
 	if request.POST:
 		form = PostForm(request.POST, request.FILES)
 		if form.is_valid():
-			image = form.cleaned_data.get("image")
-			info = form.cleaned_data.get("info")
-			Post.objects.create(image=image, info=info, owner=profile_data["profile"]).save()
+			print(form.cleaned_data)
+			post = form.save(commit=False)
+			post.owner = profile_data["profile"]
+			post.save()
+			form.save_m2m()
 			return redirect('/')
 	return render(request, "User/add_post.html", profile_data)
 

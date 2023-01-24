@@ -8,6 +8,7 @@ class Profile(models.Model):
 	profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True, default=None)
 	bio = models.TextField(blank=True, null=True)
 	website_url = models.CharField(max_length=40, blank=True, null=True)
+	fav_anime = models.CharField(max_length=70)
 	
 	@property
 	def posts_count(self):
