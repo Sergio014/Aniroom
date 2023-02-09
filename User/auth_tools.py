@@ -50,7 +50,7 @@ class AuthTools:
 	@staticmethod
 	def is_liked(watcher, post):
 		try:
-			Likes.objects.get(owner=watcher, post=post)
+			Like.objects.get(owner=watcher, post=post)
 			return True
 		except:
 			return False

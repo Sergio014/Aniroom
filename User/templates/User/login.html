@@ -1,0 +1,40 @@
+{% load sass_tags %}
+<!DOCTYPE html>
+<html lang="eng">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Log in</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,600;1,500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="{% sass_src 'sass/index.scss' %}" type="text/css"/>
+  </head>
+  <body>
+    <!-- ❗️❗️❗️ Add partials like so for every page -->
+    <section class="register">
+      <div class="container">
+        <h1 class="register__title"><span>Register/</span> Log In</h1>
+        <form class="register__form" method="post">
+          {% csrf_token %}
+          <label class="register__label"
+            >Your Username
+            <input class="register__input" type="text" placeholder="Username" name="username"/>
+          </label>
+          <label class="register__label"
+            >Your password:
+            <input class="register__input" type="text" placeholder="Password" name="password"/>
+          </label>
+          <div class="register__button-wrapper">
+            <button class="register__button" type="submit">Log in</button>
+          </div>
+        </form>
+      </div>
+    </section>    
+  </body>
+</html>

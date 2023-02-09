@@ -1,0 +1,20 @@
+// @import './common';
+@import './base/common';
+@import './base/mixins';
+@import './base/variables';
+@import './base/container';
+@import './base/base';
+// @import './base/cursor';
+// @import './base/visually-hidden';
+// @import './base/scrollbar';
+
+@import './components/register';
+
+// modals
+// @import './components/buy-now-modal';
+// @import './components/products-modal';
+
+// @import './components/contacts-location-modal';
+// @import './components/contacts-franchise-modal';
+
+// @import './components/about-modal';

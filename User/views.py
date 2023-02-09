@@ -25,11 +25,11 @@ def register_view(request):
 		if user["is_new"] == False:
 			if user["invalid"] == "username":
 				in_eror = {'text_u': 'Username is already used'}
-				return render(request, 'User/sign_up.html', context=in_eror)
+				return render(request, 'User/register.html', context=in_eror)
 			new_eror = {'text': 'This email is already used'}
-			return render(request, 'User/sign_up.html', context=new_eror)
+			return render(request, 'User/register.html', context=new_eror)
 		return redirect('/login/')
-	return render(request, "User/sign_up.html")
+	return render(request, "User/register.html")
 
 def login_view(request):
 	if request.user.is_authenticated:
@@ -41,7 +41,7 @@ def login_view(request):
 		user = AuthTools.authenticate(username, password)
 		if user is None:
 			in_eror = {'text_u': 'Incorect username or password!'}
-			return render(request, 'User/log_in_page.html', context=in_eror)
+			return render(request, 'User/login.html', context=in_eror)
 		AuthTools.login(request, user)		
 		profile_data = {
 			'user': None,
@@ -50,7 +50,7 @@ def login_view(request):
 		}
 		AuthTools.profile_register(user, profile_data)
 		return redirect('/')
-	return render(request, 'User/log_in_page.html')
+	return render(request, 'User/login.html')
 	
 def profile_view(request):
 	user = request.user
