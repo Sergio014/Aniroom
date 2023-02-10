@@ -142,7 +142,7 @@ class AuthTools:
 					'invalid': 'username',
 					}
 		except:
-			User.objects.create_user(**user_data)
+			User.objects.create_user(user_data)
 			return {
 				"is_new": True,
 			}

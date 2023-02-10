@@ -14,6 +14,8 @@ def register_view(request):
 		return redirect('/')
 	if request.POST:
 		form_data = request.POST
+		if not form_data['password'] == form_data['password2']:
+			return render(request, "User/register.html",  context={'inc_pass': "Passwords do not match."})
 		user_data = {
 			'username': ''.join(form_data['username']),
 			'first_name': form_data["fname"],
@@ -24,9 +26,9 @@ def register_view(request):
 		user = AuthTools.register(user_data)
 		if user["is_new"] == False:
 			if user["invalid"] == "username":
-				in_eror = {'text_u': 'Username is already used'}
+				in_eror = {'username_excist': 'Username is already used'}
 				return render(request, 'User/register.html', context=in_eror)
-			new_eror = {'text': 'This email is already used'}
+			new_eror = {'email_alr_excist': 'This email is already used'}
 			return render(request, 'User/register.html', context=new_eror)
 		return redirect('/login/')
 	return render(request, "User/register.html")
@@ -40,7 +42,7 @@ def login_view(request):
 		password = data.get('password', False)
 		user = AuthTools.authenticate(username, password)
 		if user is None:
-			in_eror = {'text_u': 'Incorect username or password!'}
+			in_eror = {'inc_username_or_pass': 'Incorect username or password!'}
 			return render(request, 'User/login.html', context=in_eror)
 		AuthTools.login(request, user)		
 		profile_data = {

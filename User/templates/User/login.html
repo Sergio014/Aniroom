@@ -25,11 +25,15 @@
           <label class="register__label"
             >Your Username
             <input class="register__input" type="text" placeholder="Username" name="username"/>
+            {% if inc_username_or_pass %}
+              {{ inc_username_or_pass }}
+            {% endif %}
           </label>
           <label class="register__label"
             >Your password:
             <input class="register__input" type="text" placeholder="Password" name="password"/>
           </label>
+          <p>First time here?  </p><a href="{% url 'User:register' %}" style="color: blue;">Register</a>
           <div class="register__button-wrapper">
             <button class="register__button" type="submit">Log in</button>
           </div>

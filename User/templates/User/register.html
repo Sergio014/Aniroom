@@ -33,6 +33,9 @@
           <label class="register__label"
             >Username
             <input class="register__input" type="text" placeholder="Username" name="username" />
+            {% if username_excist %}
+              <p>{{ username_excist }}</p>
+            {% endif %}
           </label>
           <label class="register__label"
             >Your password:
@@ -42,6 +45,9 @@
           <label class="register__label"
             >Pass your password again:
             <input class="register__input" type="password" name="password2" />
+            {% if inc_pass %}
+              <p>{{ inc_pass }}</p>
+            {% endif %}
           </label>
           <label class="register__label"
             >Your email<span> (Optional)</span>
@@ -51,6 +57,9 @@
               placeholder="you@example.com"
               name="email"
             />
+            {% if email_alr_excist %}
+              <p>{{ email_alr_excist }}</p>
+            {% endif %}
           </label>
           <label class="register__label-checkbox">
             <input class="register__checkbox" type="checkbox" />
