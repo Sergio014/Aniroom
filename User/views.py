@@ -16,6 +16,9 @@ def register_view(request):
 		form_data = request.POST
 		if not form_data['password'] == form_data['password2']:
 			return render(request, "User/register.html",  context={'inc_pass': "Passwords do not match."})
+		invalid_pass = AuthTools.password_check(form_data['password'])
+		if invalid_pass is not None:
+			return render(request, "User/register.html",  context={'invalid_pass': invalid_pass})
 		user_data = {
 			'username': ''.join(form_data['username']),
 			'first_name': form_data["fname"],
@@ -44,7 +47,7 @@ def login_view(request):
 		if user is None:
 			in_eror = {'inc_username_or_pass': 'Incorect username or password!'}
 			return render(request, 'User/login.html', context=in_eror)
-		AuthTools.login(request, user)		
+		AuthTools.login(request, user)
 		profile_data = {
 			'user': None,
 			"bio": None,
@@ -89,12 +92,12 @@ def edit_profile_view(request):
 		form = ProfileImageForm(request.POST, request.FILES)
 		if form.is_valid():
 			if form.cleaned_data["profile_image"] is not None:
-			      if profile.profile_image:
-			      	profile.profile_image.delete()
-			      img = form.cleaned_data.get("profile_image")
-			      profile.profile_image = img
-			      profile.save()
-			      return render(request, "User/profile.html", context=user_data)
+				if profile.profile_image:
+					profile.profile_image.delete()
+				img = form.cleaned_data.get("profile_image")
+				profile.profile_image = img
+				profile.save()
+				return render(request, "User/profile.html", context=user_data)
 			else:
 				user.username = "".join(form_data['username'])
 				user.first_name = form_data["first_name"]
@@ -104,6 +107,7 @@ def edit_profile_view(request):
 				profile.save()
 				user.save()
 				return render(request, 'User/profile.html', context=user_data)
+		return render(request, "User/edit_profile.html", context=user_data)
 	return render(request, "User/edit_profile.html", context=user_data)
 	
 def add_post_view(request):

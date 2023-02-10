@@ -42,6 +42,9 @@
             <input class="register__input register__input-before" type="password" name="password"/>
           </label>
           <p class="register__helper">Minimum amount of characters: 8</p>
+          {% if invalid_pass %}
+              <p>{{ invalid_pass }}</p>
+          {% endif %}
           <label class="register__label"
             >Pass your password again:
             <input class="register__input" type="password" name="password2" />

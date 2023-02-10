@@ -202,9 +202,25 @@ class AuthTools:
 			status = "invalid"
 		return status
 	@staticmethod
-	def validate_password(password):
-		min_pasw_length = 7
-		is_valid = True
-		if len(password) <= min_pasw_length:
-			is_valid = False
-		return is_valid
+	def password_check(passwd):
+		
+		SpecialSym =['$', '@', '#', '%']
+		
+		if len(passwd) <= 8:
+			return 'length should be at least 8'
+			
+		elif len(passwd) > 20:
+			return 'length should be not be greater than 20'
+			
+		elif not any(char.isdigit() for char in passwd):
+			return 'Password should have at least one numeral'
+			
+		elif not any(char.isupper() for char in passwd):
+			return 'Password should have at least one uppercase letter'
+			
+		elif not any(char.islower() for char in passwd):
+			return 'Password should have at least one lowercase letter'
+			
+		elif not any(char in SpecialSym for char in passwd):
+			return 'Password should have at least one of the symbols $@#'
+		return None
