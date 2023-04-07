@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'taggit',
     'User',
     'main',
+    'api',
     'searching',
     'rest_framework.authtoken',
     'sass_processor',
